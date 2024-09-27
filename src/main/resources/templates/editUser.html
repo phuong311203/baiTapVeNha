@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chỉnh sửa thành viên</title>
+</head>
+<body>
+<h2>Chỉnh sửa thành viên</h2>
+<form th:action="@{/editUser}" th:object="${user}" method="post">
+    <!-- Hidden field for ID -->
+    <input type="hidden" th:field="*{id}" />
+
+    Username: <input type="text" th:field="*{username}"/><br/>
+    Email: <input type="email" th:field="*{email}"/><br/>
+    <button type="submit">Lưu</button>
+</form>
+</body>
+</html>

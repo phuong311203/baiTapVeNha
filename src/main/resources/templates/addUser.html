@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm thành viên</title>
+</head>
+<body>
+<h2>Thêm thành viên</h2>
+<form th:action="@{/saveUser}" th:object="${user}" method="post">
+    Username: <input type="text" th:field="*{username}"/><br/>
+    Email: <input type="email" th:field="*{email}"/><br/>
+    <button type="submit">Lưu</button>
+</form>
+</body>
+</html>
