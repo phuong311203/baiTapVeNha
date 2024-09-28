@@ -33,8 +33,10 @@ out/
 /dist/
 /nbdist/
 /.nb-gradle/
+database/test.mv.db
 
 ### VS Code ###
 .vscode/
+echo "database/test.mv.db"
 
 
