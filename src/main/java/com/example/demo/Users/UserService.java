@@ -1,15 +1,19 @@
-package com.example.demo;
+package com.example.demo.Users;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    
 
     public void saveOrUpdateUser(User user) {
         if (user.getId() != null) {
@@ -25,8 +29,10 @@ public class UserService {
     }
 
 
-    public Iterable<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<User> getAllUsers() {
+        Iterable<User> iterable = userRepository.findAll();
+        return StreamSupport.stream(iterable.spliterator(), false)
+                .collect(Collectors.toList());
     }
 
 

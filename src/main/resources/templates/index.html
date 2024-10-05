@@ -11,11 +11,13 @@
     <tr>
         <th>Username</th>
         <th>Email</th>
+        <th>Company</th> <!-- Thêm cột hiển thị Company -->
         <th>Action</th>
     </tr>
     <tr th:each="user : ${listUsers}">
         <td th:text="${user.username}"></td>
         <td th:text="${user.email}"></td>
+        <td th:text="${user.company != null ? user.company.companyName : 'No company'}"></td> <!-- Hiển thị tên công ty -->
         <td>
             <a th:href="@{/edit/{id}(id=${user.id})}">Edit</a>
             <a th:href="@{/delete/{id}(id=${user.id})}">Delete</a>

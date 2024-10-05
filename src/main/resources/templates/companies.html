@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Smoke Tests</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h1>Companies</h1>
+<table>
+    <tr>
+        <th>Id</th>
+        <th>Company Name</th>
+        <th>User</th>
+    </tr>
+    <tr th:each="company : ${companies}">
+        <td th:text="${company.id}"></td>
+        <td th:text="${company.getCompanyName()}"></td>
+        <td>
+            <table>
+                <tr>
+                    <th>User Id</th>
+                    <th>User Name</th>
+                </tr>
+                <tr th:each="user : ${company.getUsers()}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.getUsername()}"></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

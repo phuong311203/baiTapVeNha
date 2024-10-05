@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Create a Company</title>
+</head>
+<body>
+<h1>Create a Company</h1>
+<form th:action="@{/addCompany}" th:object="${company}" method="POST">
+    Company Name:
+    <input type="text" th:field="*{companyName}"/>
+    <br/>
+    <input type="submit" value="Create"/>
+</form>
+</body>
+</html>

@@ -1,5 +1,6 @@
-package com.example.demo;
+package com.example.demo.Users;
 
+import com.example.demo.Company.Company;
 import jakarta.persistence.*;
 @Table(name = "Users")
 @Entity
@@ -14,13 +15,18 @@ public class User {
     @Column
     private String email;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id") // Khóa ngoại để liên kết với Company
+    private Company company;
+
     public User() {
     }
 
-    public User(Integer id, String username, String email) {
+    public User(Integer id, String username, String email, Company company) {
         this.id = id;
         this.username = username;
         this.email = email;
+        this.company = company;
     }
 
 
@@ -46,6 +52,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
 }
