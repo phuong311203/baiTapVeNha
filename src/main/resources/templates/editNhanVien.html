@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Sửa nhân viên</title>
+</head>
+<body>
+<h2>Sửa thông tin nhân viên</h2>
+<form th:action="@{/companies/{companyId}/editNhanVien/{nhanVienId}(companyId=${companyId}, nhanVienId=${nhanVien.id})}" method="post">
+    <label for="name">Tên:</label>
+    <input type="text" id="name" name="name" th:value="${nhanVien.name}">
+    <button type="submit">Cập nhật</button>
+</form>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Danh sách nhân viên</title>
+</head>
+<body>
+<h2>Danh sách nhân viên của công ty <span th:text="${company.companyName}"></span></h2>
+<a th:href="@{/companies/{companyId}/addNhanVien(companyId=${company.id})}">Thêm nhân viên</a>
+<table border="1">
+    <tr>
+        <th>Tên</th>
+        <th>Hành động</th>
+    </tr>
+    <tr th:each="nhanVien : ${company.nhanViens}">
+        <td><span th:text="${nhanVien.name}"></span></td>
+        <td>
+            <a th:href="@{/companies/{companyId}/editNhanVien/{nhanVienId}(companyId=${company.id}, nhanVienId=${nhanVien.id})}">Sửa</a>
+            <a th:href="@{/companies/{companyId}/delete/{nhanVienId}(companyId=${company.id}, nhanVienId=${nhanVien.id})}">Xóa</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Thêm nhân viên</title>
+</head>
+<body>
+<h2>Thêm nhân viên mới</h2>
+<form th:action="@{/companies/{companyId}/addNhanVien(companyId=${companyId})}" method="post">
+    <label for="name">Tên:</label>
+    <input type="text" id="name" name="name">
+    <button type="submit">Thêm</button>
+</form>
+</body>
+</html>
