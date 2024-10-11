@@ -11,6 +11,7 @@
         <th>Id</th>
         <th>Company Name</th>
         <th>User</th>
+        <th>Xem Nhan Vien</th>
     </tr>
     <tr th:each="company : ${companies}">
         <td th:text="${company.id}"></td>
@@ -27,6 +28,7 @@
                 </tr>
             </table>
         </td>
+        <td><a th:href="@{/companies/{companyId}/nhanviens(companyId=${company.id})}">Xem</a></td>
         <td></td>
     </tr>
 </table>
