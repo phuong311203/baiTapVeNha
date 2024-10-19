@@ -19,7 +19,6 @@ public class NhanVienController {
     @Autowired
     private NhanVienRepository nhanVienRepository;
 
-    // Danh sách nhân viên
     @GetMapping("/{companyId}/nhanviens")
     public String listNhanViens(@PathVariable Long companyId, Model model) {
         Company company = companyRepository.findById(companyId).orElse(null);
@@ -27,7 +26,7 @@ public class NhanVienController {
         return "ListNhanVien";
     }
 
-    // Thêm nhân viên
+
     @GetMapping("/{companyId}/addNhanVien")
     public String addNhanVienForm(@PathVariable Long companyId, Model model) {
         model.addAttribute("nhanVien", new NhanVien());
@@ -41,7 +40,7 @@ public class NhanVienController {
         return "redirect:/companies/" + companyId + "/nhanviens";
     }
 
-    // Cập nhật nhân viên
+
     @GetMapping("/{companyId}/editNhanVien/{nhanVienId}")
     public String editNhanVienForm(@PathVariable Long companyId, @PathVariable int nhanVienId, Model model) {
         NhanVien nhanVien = nhanVienRepository.findById(nhanVienId).orElse(null);
@@ -56,7 +55,7 @@ public class NhanVienController {
         return "redirect:/companies/" + companyId + "/nhanviens";
     }
 
-    // Xóa nhân viên
+
     @GetMapping("/{companyId}/delete/{nhanVienId}")
     public String deleteNhanVien(@PathVariable Long companyId, @PathVariable int nhanVienId) {
         nhanVienService.deleteNhanVien(companyId, nhanVienId);

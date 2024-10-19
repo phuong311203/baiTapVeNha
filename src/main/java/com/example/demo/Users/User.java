@@ -15,6 +15,9 @@ public class User {
     @Column
     private String email;
 
+    @Column
+    private String password;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id") // Khóa ngoại để liên kết với Company
     private Company company;
@@ -27,6 +30,7 @@ public class User {
         this.username = username;
         this.email = email;
         this.company = company;
+        this.password = password;
     }
 
 
@@ -44,6 +48,14 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmail() {
