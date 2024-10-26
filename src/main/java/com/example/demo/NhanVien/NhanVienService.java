@@ -14,24 +14,30 @@ public class NhanVienService {
     @Autowired
     private CompanyRepository companyRepository;
 
-
-    public void saveNhanVien(NhanVien nhanVien, Long companyId) {
-        Company company = companyRepository.findById(companyId).orElse(null);
-        if (company != null) {
-            nhanVien.getCompanies().add(company); // Thêm company vào danh sách của nhanVien
-            company.getNhanViens().add(nhanVien); // Thêm nhanVien vào danh sách của company
-            nhanVienRepository.save(nhanVien);
-            companyRepository.save(company);
-        }
+    public NhanVien getNhanVienById(int nhanVienId) {
+        return nhanVienRepository.findById(nhanVienId).orElse(null);
     }
 
 
-    public void updateNhanVien(NhanVien nhanVien, int nhanVienId) {
+    public NhanVien saveNhanVien(NhanVien nhanVien, Long companyId) {
+        Company company = companyRepository.findById(companyId).orElse(null);
+        if (company != null) {
+            nhanVien.getCompanies().add(company);
+            company.getNhanViens().add(nhanVien);
+            nhanVienRepository.save(nhanVien);
+            companyRepository.save(company);
+        }
+        return nhanVien;
+    }
+
+
+    public NhanVien updateNhanVien(NhanVien nhanVien, int nhanVienId) {
         NhanVien existingNhanVien = nhanVienRepository.findById(nhanVienId).orElse(null);
         if (existingNhanVien != null) {
             existingNhanVien.setName(nhanVien.getName());
             nhanVienRepository.save(existingNhanVien);
         }
+        return existingNhanVien;
     }
 
 
@@ -41,9 +47,9 @@ public class NhanVienService {
             Company company = companyRepository.findById(companyId).orElse(null);
             if (company != null) {
                 company.getNhanViens().remove(nhanVien);
-                companyRepository.save(company); // Cập nhật company trước khi xóa nhân viên
+                companyRepository.save(company);
             }
-            nhanVienRepository.delete(nhanVien); // Sau đó xóa nhân viên
+            nhanVienRepository.delete(nhanVien);
         }
     }
 }

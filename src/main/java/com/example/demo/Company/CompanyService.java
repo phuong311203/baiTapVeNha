@@ -17,8 +17,9 @@ public class CompanyService {
     }
 
     // Lưu hoặc cập nhật công ty
-    public void saveOrUpdate(Company company) {
+    public Company saveOrUpdate(Company company) {
         companyRepository.save(company);
+        return company;
     }
 
     // Lấy công ty theo ID

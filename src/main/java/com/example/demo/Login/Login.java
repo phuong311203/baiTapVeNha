@@ -2,6 +2,7 @@ package com.example.demo.Login;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -15,7 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class Login{
+public class Login {
 
     @Bean
     protected UserDetailsService userDetailsService() {
@@ -27,10 +28,11 @@ public class Login{
         UserDetails user2 = User.builder()
                 .username("phuong")
                 .password(passwordEncoder().encode("123"))
-                .roles("USER")
+                .roles("ADMIN")
                 .build();
-        return new InMemoryUserDetailsManager(user ,user2);
+        return new InMemoryUserDetailsManager(user, user2);
     }
+
     @Bean
     protected PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -40,18 +42,19 @@ public class Login{
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(
-                        request -> request
-                                .requestMatchers("/").permitAll()
-                                .requestMatchers("/index").permitAll()
-                                .anyRequest().authenticated()
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers(HttpMethod.PUT, "/api/companies/*/nhanviens/*").permitAll()
+                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/h2-console/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
                 )
                 .headers(headers -> headers.frameOptions().sameOrigin())
                 .formLogin(form -> form
-                        .loginPage("/login")
-                        .permitAll())
+                .loginPage("/login")
+                .permitAll())  // Sử dụng trang login mặc định
                 .logout(config -> config
-                        .logoutSuccessUrl("/login"))
+                        .logoutSuccessUrl("/login"))  // Sau khi logout, chuyển về /login
                 .build();
     }
 }

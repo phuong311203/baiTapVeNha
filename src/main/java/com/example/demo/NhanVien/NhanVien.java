@@ -1,6 +1,7 @@
 package com.example.demo.NhanVien;
 
 import com.example.demo.Company.Company;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ public class NhanVien {
     private String name;
 
     @ManyToMany(mappedBy = "nhanViens")
+    @JsonIgnore
+
     private List<Company> companies = new ArrayList<>();
 
     public int getId() {
