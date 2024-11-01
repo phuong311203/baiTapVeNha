@@ -1,8 +1,11 @@
 package com.example.demo.Users;
 
+import com.example.demo.Role.Role;
+import com.example.demo.Role.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -13,6 +16,7 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    private RoleRepository roleRepository;
     
 
     public void saveOrUpdateUser(User user) {
@@ -46,5 +50,11 @@ public class UserService {
 
     public void deleteUser(Integer id) {
         userRepository.deleteById(id);
+    }
+
+    public void registerUser(User user) {
+        Role userRole = roleRepository.findByName("USER");
+        user.setRoles(Collections.singleton(userRole));
+        userRepository.save(user);
     }
 }

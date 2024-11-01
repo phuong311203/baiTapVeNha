@@ -3,9 +3,13 @@ package com.example.demo.Login;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,20 +22,22 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class Login {
 
-    @Bean
-    protected UserDetailsService userDetailsService() {
-        UserDetails user = User.builder()
-                .username("user")
-                .password(passwordEncoder().encode("password"))
-                .roles("USER")
-                .build();
-        UserDetails user2 = User.builder()
-                .username("phuong")
-                .password(passwordEncoder().encode("123"))
-                .roles("ADMIN")
-                .build();
-        return new InMemoryUserDetailsManager(user, user2);
-    }
+//    @Bean
+//    protected UserDetailsService userDetailsService() {
+//        UserDetails user = User.builder()
+//                .username("user")
+//                .password(passwordEncoder().encode("password"))
+//                .roles("USER")
+//                .build();
+//        UserDetails user2 = User.builder()
+//                .username("phuong")
+//                .password(passwordEncoder().encode("123"))
+//                .roles("ADMIN")
+//                .build();
+//        return new InMemoryUserDetailsManager(user, user2);
+//    }
+
+
 
     @Bean
     protected PasswordEncoder passwordEncoder() {
@@ -39,17 +45,36 @@ public class Login {
     }
 
     @Bean
+    public AuthenticationManager authenticationManager(
+            UserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
+
+        return new ProviderManager(authenticationProvider);
+    }
+
+    @Bean
+    UserDetailsService userDetailsService() {
+        return new UserDetailsServiceIml();
+    }
+
+    @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(HttpMethod.PUT, "/api/companies/*/nhanviens/*").permitAll()
+                        .requestMatchers("/register").permitAll()
+                        .requestMatchers("/process-register").permitAll()
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/api/**").permitAll()
-                        .requestMatchers("/h2-console/**").hasRole("ADMIN")
+                        .requestMatchers("/h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .headers(headers -> headers.frameOptions().sameOrigin())
+                .headers(httpSecurityHeadersConfigurer -> {
+                    httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable);
+                })
                 .formLogin(form -> form
                 .loginPage("/login")
                 .permitAll())  // Sử dụng trang login mặc định
@@ -57,4 +82,5 @@ public class Login {
                         .logoutSuccessUrl("/login"))  // Sau khi logout, chuyển về /login
                 .build();
     }
+
 }

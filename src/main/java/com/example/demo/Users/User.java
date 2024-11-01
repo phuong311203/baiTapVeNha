@@ -1,7 +1,12 @@
 package com.example.demo.Users;
 
 import com.example.demo.Company.Company;
+import com.example.demo.Role.Role;
 import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
+
 @Table(name = "Users")
 @Entity
 public class User {
@@ -16,11 +21,25 @@ public class User {
     private String email;
 
     @Column
+    private String firstName;
+
+    @Column
+    private String lastName;
+
+    @Column
     private String password;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id") // Khóa ngoại để liên kết với Company
     private Company company;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "USER_ROLES",
+            joinColumns = @JoinColumn(name = "USER_ID"),
+            inverseJoinColumns = @JoinColumn(name = "ROLE_ID")
+    )
+    private Set<Role> roles = new HashSet<>();
 
     public User() {
     }
@@ -72,6 +91,30 @@ public class User {
 
     public void setCompany(Company company) {
         this.company = company;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
 }
