@@ -68,10 +68,12 @@ public class Login {
                         .requestMatchers("/register").permitAll()
                         .requestMatchers("/process-register").permitAll()
                         .requestMatchers("/").permitAll()
+                        .requestMatchers("/companies").hasRole("ADMIN")
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )
+
                 .headers(httpSecurityHeadersConfigurer -> {
                     httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable);
                 })

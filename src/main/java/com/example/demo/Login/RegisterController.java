@@ -30,23 +30,20 @@ public class RegisterController {
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("user", new User());
-        return "signup"; // the name of your HTML page
+        return "signup";
     }
 
     @PostMapping("/process-register")
     public String processRegister(@ModelAttribute User user) {
-        // Check if username already exists
         if (userRepository.existsByUsername(user.getUsername())) {
-            // Add a message to the model to inform the user
-            return "redirect:/register?error=username_exists"; // or handle with a model attribute
+            return "redirect:/register?error=username_exists";
         }
 
-        // Encode the password
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
 
-        // Retrieve or create the USER role
+
         Role role = roleRepository.findByName("ROLE_USER");
         if (role == null) {
             role = new Role();
@@ -54,14 +51,14 @@ public class RegisterController {
             roleRepository.save(role);
         }
 
-        // Set the role for the user
+
         Set<Role> roles = new HashSet<>();
         roles.add(role);
         user.setRoles(roles);
 
-        // Save the user
+
         userRepository.save(user);
 
-        return "redirect:/login"; // Redirect after successful registration
+        return "redirect:/login";
     }
 }
