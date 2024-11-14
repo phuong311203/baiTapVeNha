@@ -1,5 +1,6 @@
 package com.example.demo.RestAPI;
 
+import com.example.demo.JWT.JwtService;
 import com.example.demo.Role.Role;
 import com.example.demo.Role.RoleRepository;
 import com.example.demo.Users.User;
@@ -9,6 +10,10 @@ import com.example.demo.Users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +29,12 @@ public class RestUserRole {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private UserService userService;
+
+    @Autowired
+    private JwtService jwtService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @Autowired
     public RestUserRole(UserRepository userRepository, RoleRepository roleRepository, UserService userService) {
@@ -63,5 +74,19 @@ public class RestUserRole {
         userRepository.save(user);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
+    }
+    @PostMapping("/generateToken")
+    public String authenticateAndGetToken(@RequestBody UserDTO authRequest) {
+        Authentication authentication =
+                authenticationManager
+                        .authenticate(new UsernamePasswordAuthenticationToken(
+                                authRequest.getUsername(),
+                                authRequest.getPassword()));
+
+        if (authentication.isAuthenticated()) {
+            return jwtService.generateToken(authRequest.getUsername());
+        } else {
+            throw new UsernameNotFoundException("Invalid user request!");
+        }
     }
 }
