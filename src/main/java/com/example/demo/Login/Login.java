@@ -20,6 +20,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -69,13 +73,22 @@ public class Login {
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors
+                        .configurationSource(request -> {
+                            CorsConfiguration config = new CorsConfiguration();
+                            config.setAllowedOrigins(List.of("http://localhost:3000"));
+                            config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+                            config.setAllowedHeaders(List.of("*"));
+                            return config;
+                        }))
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/register").permitAll()
                         .requestMatchers("/process-register").permitAll()
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/companies").hasRole("ADMIN")
-                        .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/api").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/api/register", "/api/generateToken", "/h2-console/*").permitAll()
                         .anyRequest().authenticated()
                 )
                 .headers(httpSecurityHeadersConfigurer -> {
@@ -86,10 +99,11 @@ public class Login {
                         .permitAll())
                 .logout(config -> config
                         .logoutSuccessUrl("/login"))
-                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
 
 
 }
